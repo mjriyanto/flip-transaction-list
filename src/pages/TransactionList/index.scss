@@ -1,0 +1,47 @@
+.header {
+  text-align: center;
+  font-size: 35px;
+  font-weight: 300;
+  margin-bottom: 30px;
+}
+.subheader {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.text {
+  font-size: 13px;
+  line-height: 1.5em;
+  margin-bottom: 15px;
+}
+.currency {
+  color: #fd6542;
+  font-weight: 700;
+}
+.flex-container {
+  .search,
+  .filter {
+    margin-bottom: 10px;
+  }
+  @media screen and (min-width: 620px) {
+    display: flex;
+    margin-bottom: 20px;
+    .search {
+      width: 80%;
+    }
+    .filter {
+      width: 20%;
+    }
+  }
+}
+@media screen and (min-width: 480px) {
+  .header {
+    font-size: 38px;
+  }
+  .subheader {
+    font-size: 22px;
+  }
+  .text {
+    font-size: 15px;
+  }
+}

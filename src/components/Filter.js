@@ -7,7 +7,6 @@ const StyledFilter = styled.div`
   .dropbtn {
     background-color: #fff;
     border: 1px solid #e0e0e0;
-    border-radius: 2px;
     color: #000000;
     cursor: pointer;
     font-size: 13px;
@@ -58,7 +57,9 @@ const Filter = () => {
         Urutkan&emsp;<span className="arrow">&#10597;</span>
       </button>
       <div className="dropdown-content">
-        <a href="#" onClick={(e) => console.log(e)}>Nama A-Z</a>
+        <a href="#" onClick={(e) => console.log(e)}>
+          Nama A-Z
+        </a>
         <a href="#">Nama Z-A</a>
         <a href="#">Tanggal terbaru</a>
         <a href="#">Tanggal terlama</a>

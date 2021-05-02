@@ -2,9 +2,7 @@ import styled from 'styled-components';
 
 const StyledSearch = styled.div`
   width: 100%;
-  margin-bottom: 10px;
   border: 1px solid #e0e0e0;
-  border-radius: 2px;
   i {
     position: absolute;
   }
@@ -28,14 +26,16 @@ const StyledSearch = styled.div`
   }
 `;
 
-const Search = () => {
+const Search = ({ onChange, state }) => {
   return (
     <StyledSearch>
       <i className="fa fa-search icon"></i>
       <input
-        className="input-field"
         type="text"
+        value={state.search}
+        className="input-field"
         placeholder="Cari nama atau bank"
+        onChange={(e) => onChange('search', e.target.value)}
       />
     </StyledSearch>
   );

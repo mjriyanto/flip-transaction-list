@@ -1,37 +1,67 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchTransaction } from '../../redux/transaction/action';
-import styled from 'styled-components';
+import { fetchTransaction, handleState } from '../../redux/transaction/action';
 
 import Search from '../../components/Search';
 import Filter from '../../components/Filter';
+import Card from '../../components/Card';
+import './index.scss';
 
 const TransactionList = () => {
   const state = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
 
-  const StyledTransactionList = styled.div`
-    .header {
-      text-align: center;
-      font-size: 35px;
-      font-weight: 300;
-      margin-bottom: 30px;
+  const onChange = (field, value) => {
+    dispatch(handleState(field, value));
+  };
+
+  const formatCurrency = (value) => {
+    let string = value.toString();
+    let sisa = string.length % 3;
+    let rupiah = string.substr(0, sisa);
+    let ribuan = string.substr(sisa).match(/\d{3}/g);
+
+    if (ribuan) {
+      let separator = sisa ? '.' : '';
+      return (rupiah += separator + ribuan.join('.'));
     }
-    .subheader {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .text {
-      font-size: 13px;
-      line-height: 1.5em;
-      margin-bottom: 15px;
-    }
-    .currency {
-      color: #fd6542;
-      font-weight: 700;
-    }
-  `;
+  };
+
+  const formatDate = (value) => {
+    let string = value.toString();
+    let date = string.split(' ')[0];
+    let year = parseInt(date.split('-')[0]);
+    let month = parseInt(date.split('-')[1] - 1);
+    let day = parseInt(date.split('-')[2]);
+
+    const months = [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ];
+
+    let newDate = `${day.toString()} ${months[
+      month
+    ].toString()} ${year.toString()}`;
+    return newDate;
+  };
+
+  const countTotal = (value) => {
+    let total = 0;
+    value.map((val) => {
+      total += val.amount;
+    });
+    return total;
+  };
 
   useEffect(() => {
     dispatch(fetchTransaction());
@@ -39,18 +69,40 @@ const TransactionList = () => {
   }, []);
 
   return (
-    <StyledTransactionList>
-      <div>
-        <p className="header">Daftar Transaksi</p>
-        <p className="subheader">Halo kak!</p>
-        <p className="text">
-          Kamu telah melakukan transaksi sebesar{' '}
-          <span className="currency">Rp5.000.000</span> sejak menggunakan Flip.
-        </p>
-        <Search />
-        <Filter />
+    <div>
+      <p className="header">Daftar Transaksi</p>
+      <p className="subheader">Halo kak!</p>
+      <p className="text">
+        Kamu telah melakukan transaksi sebesar{' '}
+        <span className="currency">{`Rp${formatCurrency(
+          countTotal(state.transactions)
+        )}`}</span>{' '}
+        sejak menggunakan Flip.
+      </p>
+      <div className="flex-container">
+        <div className="search">
+          <Search onChange={onChange} state={state} />
+        </div>
+        <div className="filter">
+          <Filter />
+        </div>
       </div>
-    </StyledTransactionList>
+      {state.transactions &&
+        state.transactions.map((trf) => (
+          <Card
+            key={trf.id}
+            id={trf.id}
+            sender_bank={trf.sender_bank}
+            benef_bank={trf.beneficiary_bank}
+            receiver={trf.beneficiary_name}
+            status={trf.status}
+            amount={formatCurrency(trf.amount)}
+            date={formatDate(trf.completed_at)}
+            success
+          />
+        ))}
+      <Card />
+    </div>
   );
 };
 

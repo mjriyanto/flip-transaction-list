@@ -37,3 +37,11 @@ export const fetchTransactionFailure = (error) => {
     payload: error,
   };
 };
+
+export const handleState = (field, value) => {
+  return {
+    type: types.HANDLE_STATE_TRANSACTION_LIST,
+    field,
+    value,
+  };
+};
