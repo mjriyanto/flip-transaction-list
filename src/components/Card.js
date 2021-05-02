@@ -32,7 +32,6 @@ const StyledCard = styled.div`
       }
     }
     .status {
-      font-size: 12px;
       width: 25%;
       align-self: center;
       text-align: center;
@@ -40,9 +39,11 @@ const StyledCard = styled.div`
         background-color: ${(props) => (props.success ? '#56b586' : '#fd6542')};
         border-radius: 5px;
         color: #fff;
+        font-size: 12px;
         padding: 0 3px;
 
         @media screen and (min-width: 480px) {
+          font-size: 14px;
           width: 80%;
         }
       }

@@ -45,3 +45,17 @@ export const handleState = (field, value) => {
     value,
   };
 };
+
+export const filterByValue = (value) => {
+  return {
+    type: types.FILTER_BY_VALUE,
+    value,
+  };
+};
+
+export const sortByName = (value) => {
+  return {
+    type: types.SORT_BY_ALPHABET,
+    value,
+  };
+};

@@ -1,8 +1,10 @@
 import * as types from './constants';
+import * as utils from '../../utils/';
 
 const initialState = {
   loading: false,
   transactions: [],
+  filteredTransactions: [],
   error: '',
   search: '',
 };
@@ -24,13 +26,37 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         transactions: action.payload,
+        filteredTransactions: action.payload,
         error: '',
       };
     case types.FETCH_TRANSACTION_LIST_FAILURE:
       return {
         ...state,
         transactions: [],
+        filteredTransactions: [],
         error: action.payload,
+      };
+    case types.FILTER_BY_VALUE:
+      let value = action.value.toLowerCase();
+      let filteredTransactions = state.transactions.filter((trans) => {
+        return (
+          trans.beneficiary_name.toLowerCase().includes(value) ||
+          trans.beneficiary_bank.toLowerCase().includes(value) ||
+          trans.sender_bank.toLowerCase().includes(value)
+        );
+      });
+      return {
+        ...state,
+        filteredTransactions,
+      };
+    case types.SORT_BY_ALPHABET:
+      let sortedArr =
+        action.value === 'asc'
+          ? utils.sortAsc(state.filteredTransactions, 'beneficiary_name')
+          : utils.sortDesc(state.filteredTransactions, 'beneficiary_name');
+      return {
+        ...state,
+        filteredTransactions: sortedArr,
       };
     default:
       return state;

@@ -50,17 +50,19 @@ const StyledFilter = styled.div`
   }
 `;
 
-const Filter = () => {
+const Filter = ({ onSelect }) => {
   return (
     <StyledFilter>
       <button className="dropbtn">
         Urutkan&emsp;<span className="arrow">&#10597;</span>
       </button>
       <div className="dropdown-content">
-        <a href="#" onClick={(e) => console.log(e)}>
+        <a href="#" onClick={() => onSelect('asc')}>
           Nama A-Z
         </a>
-        <a href="#">Nama Z-A</a>
+        <a href="#" onClick={() => onSelect('desc')}>
+          Nama Z-A
+        </a>
         <a href="#">Tanggal terbaru</a>
         <a href="#">Tanggal terlama</a>
       </div>

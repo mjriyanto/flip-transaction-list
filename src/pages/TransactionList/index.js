@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchTransaction, handleState } from '../../redux/transaction/action';
+import {
+  fetchTransaction,
+  handleState,
+  filterByValue,
+  sortByName,
+} from '../../redux/transaction/action';
+import { formatCurrency, formatDate, countTotal } from '../../utils/';
 
 import Search from '../../components/Search';
 import Filter from '../../components/Filter';
@@ -13,54 +19,11 @@ const TransactionList = () => {
 
   const onChange = (field, value) => {
     dispatch(handleState(field, value));
+    dispatch(filterByValue(value));
   };
 
-  const formatCurrency = (value) => {
-    let string = value.toString();
-    let sisa = string.length % 3;
-    let rupiah = string.substr(0, sisa);
-    let ribuan = string.substr(sisa).match(/\d{3}/g);
-
-    if (ribuan) {
-      let separator = sisa ? '.' : '';
-      return (rupiah += separator + ribuan.join('.'));
-    }
-  };
-
-  const formatDate = (value) => {
-    let string = value.toString();
-    let date = string.split(' ')[0];
-    let year = parseInt(date.split('-')[0]);
-    let month = parseInt(date.split('-')[1] - 1);
-    let day = parseInt(date.split('-')[2]);
-
-    const months = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember',
-    ];
-
-    let newDate = `${day.toString()} ${months[
-      month
-    ].toString()} ${year.toString()}`;
-    return newDate;
-  };
-
-  const countTotal = (value) => {
-    let total = 0;
-    value.map((val) => {
-      total += val.amount;
-    });
-    return total;
+  const onSelect = (value) => {
+    dispatch(sortByName(value));
   };
 
   useEffect(() => {
@@ -69,26 +32,30 @@ const TransactionList = () => {
   }, []);
 
   return (
-    <div>
-      <p className="header">Daftar Transaksi</p>
-      <p className="subheader">Halo kak!</p>
-      <p className="text">
-        Kamu telah melakukan transaksi sebesar{' '}
-        <span className="currency">{`Rp${formatCurrency(
-          countTotal(state.transactions)
-        )}`}</span>{' '}
-        sejak menggunakan Flip.
-      </p>
+    <>
+      <div>
+        <p className="header">Daftar Transaksi</p>
+        <p className="subheader">Halo kak!</p>
+        <p className="text">
+          Kamu telah melakukan transaksi sebesar{' '}
+          <span className="currency">{`Rp${
+            countTotal(state.transactions)
+              ? formatCurrency(countTotal(state.transactions))
+              : 0
+          }`}</span>{' '}
+          sejak menggunakan Flip.
+        </p>
+      </div>
       <div className="flex-container">
         <div className="search">
           <Search onChange={onChange} state={state} />
         </div>
         <div className="filter">
-          <Filter />
+          <Filter onSelect={onSelect} />
         </div>
       </div>
-      {state.transactions &&
-        state.transactions.map((trf) => (
+      {state.filteredTransactions &&
+        state.filteredTransactions.map((trf) => (
           <Card
             key={trf.id}
             id={trf.id}
@@ -102,7 +69,7 @@ const TransactionList = () => {
           />
         ))}
       <Card />
-    </div>
+    </>
   );
 };
 
