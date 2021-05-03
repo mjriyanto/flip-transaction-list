@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import store from './redux/store';
 
 import TransactionList from './pages/TransactionList/';
+import DetailTransaction from './pages/DetailTransaction/';
+import NotFound from './pages/NotFound/';
 import Container from './components/Container';
 import './App.css';
 
@@ -12,7 +14,15 @@ function App() {
     <Provider store={store}>
       <Router>
         <Container>
-          <TransactionList />
+          <Switch>
+            <Route exact path="/" component={TransactionList} />
+            <Route
+              exact
+              path="/transaction/:id"
+              component={DetailTransaction}
+            />
+            <Route component={NotFound} />
+          </Switch>
         </Container>
       </Router>
     </Provider>

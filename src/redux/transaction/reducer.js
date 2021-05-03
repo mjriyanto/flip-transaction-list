@@ -49,11 +49,15 @@ const reducer = (state = initialState, action) => {
         ...state,
         filteredTransactions,
       };
-    case types.SORT_BY_ALPHABET:
+    case types.SORT_DATA_LIST:
       let sortedArr =
         action.value === 'asc'
           ? utils.sortAsc(state.filteredTransactions, 'beneficiary_name')
-          : utils.sortDesc(state.filteredTransactions, 'beneficiary_name');
+          : action.value === 'desc'
+          ? utils.sortDesc(state.filteredTransactions, 'beneficiary_name')
+          : action.value === 'dateAsc'
+          ? utils.sortAsc(state.filteredTransactions, 'created_at')
+          : utils.sortDesc(state.filteredTransactions, 'created_at');
       return {
         ...state,
         filteredTransactions: sortedArr,

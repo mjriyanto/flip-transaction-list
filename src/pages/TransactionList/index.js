@@ -6,16 +6,18 @@ import {
   filterByValue,
   sortByName,
 } from '../../redux/transaction/action';
+import { useHistory } from 'react-router-dom';
 import { formatCurrency, formatDate, countTotal } from '../../utils/';
 
 import Search from '../../components/Search';
 import Filter from '../../components/Filter';
-import Card from '../../components/Card';
-import './index.scss';
+import List from '../../components/List';
+import '../index.scss';
 
 const TransactionList = () => {
   const state = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const onChange = (field, value) => {
     dispatch(handleState(field, value));
@@ -24,6 +26,10 @@ const TransactionList = () => {
 
   const onSelect = (value) => {
     dispatch(sortByName(value));
+  };
+
+  const onDetail = (value) => {
+    history.push(`transaction/${value}`);
   };
 
   useEffect(() => {
@@ -39,14 +45,14 @@ const TransactionList = () => {
         <p className="text">
           Kamu telah melakukan transaksi sebesar{' '}
           <span className="currency">{`Rp${
-            countTotal(state.transactions)
-              ? formatCurrency(countTotal(state.transactions))
+            countTotal(state.filteredTransactions)
+              ? formatCurrency(countTotal(state.filteredTransactions))
               : 0
           }`}</span>{' '}
           sejak menggunakan Flip.
         </p>
       </div>
-      <div className="flex-container">
+      <div className="flex-search-container">
         <div className="search">
           <Search onChange={onChange} state={state} />
         </div>
@@ -56,19 +62,19 @@ const TransactionList = () => {
       </div>
       {state.filteredTransactions &&
         state.filteredTransactions.map((trf) => (
-          <Card
+          <List
             key={trf.id}
             id={trf.id}
             sender_bank={trf.sender_bank}
             benef_bank={trf.beneficiary_bank}
             receiver={trf.beneficiary_name}
             status={trf.status}
+            onDetail={onDetail}
             amount={formatCurrency(trf.amount)}
             date={formatDate(trf.completed_at)}
             success
           />
         ))}
-      <Card />
     </>
   );
 };

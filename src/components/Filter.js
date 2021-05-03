@@ -63,8 +63,8 @@ const Filter = ({ onSelect }) => {
         <a href="#" onClick={() => onSelect('desc')}>
           Nama Z-A
         </a>
-        <a href="#">Tanggal terbaru</a>
-        <a href="#">Tanggal terlama</a>
+        <a href="#" onClick={() => onSelect('dateAsc')}>Tanggal terbaru</a>
+        <a href="#" onClick={() => onSelect('dateDesc')}>Tanggal terlama</a>
       </div>
     </StyledFilter>
   );

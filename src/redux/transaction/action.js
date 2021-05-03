@@ -55,7 +55,7 @@ export const filterByValue = (value) => {
 
 export const sortByName = (value) => {
   return {
-    type: types.SORT_BY_ALPHABET,
+    type: types.SORT_DATA_LIST,
     value,
   };
 };
