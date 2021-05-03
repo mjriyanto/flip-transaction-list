@@ -1,5 +1,4 @@
-# React Pokemon Web App
-
+# Flip Transaction List App
 This is a simple flip transaction list application.
 
 ## Tech Stack
