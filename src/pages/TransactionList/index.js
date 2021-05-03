@@ -12,6 +12,7 @@ import { formatCurrency, formatDate, countTotal } from '../../utils/';
 import Search from '../../components/Search';
 import Filter from '../../components/Filter';
 import List from '../../components/List';
+import Loader from '../../components/Loader';
 import '../index.scss';
 
 const TransactionList = () => {
@@ -39,42 +40,48 @@ const TransactionList = () => {
 
   return (
     <>
-      <div>
-        <p className="header">Daftar Transaksi</p>
-        <p className="subheader">Halo kak!</p>
-        <p className="text">
-          Kamu telah melakukan transaksi sebesar{' '}
-          <span className="currency">{`Rp${
-            countTotal(state.filteredTransactions)
-              ? formatCurrency(countTotal(state.filteredTransactions))
-              : 0
-          }`}</span>{' '}
-          sejak menggunakan Flip.
-        </p>
-      </div>
-      <div className="flex-search-container">
-        <div className="search">
-          <Search onChange={onChange} state={state} />
+      {state && !state.loading ? (
+        <div>
+          <div>
+            <p className="header">Daftar Transaksi</p>
+            <p className="subheader">Halo kak!</p>
+            <p className="text">
+              Kamu telah melakukan transaksi sebesar{' '}
+              <span className="currency">{`Rp${
+                countTotal(state.filteredTransactions)
+                  ? formatCurrency(countTotal(state.filteredTransactions))
+                  : 0
+              }`}</span>{' '}
+              sejak menggunakan Flip.
+            </p>
+          </div>
+          <div className="flex-search-container">
+            <div className="search">
+              <Search onChange={onChange} state={state} />
+            </div>
+            <div className="filter">
+              <Filter onSelect={onSelect} />
+            </div>
+          </div>
+          {state.filteredTransactions &&
+            state.filteredTransactions.map((trf) => (
+              <List
+                key={trf.id}
+                id={trf.id}
+                sender_bank={trf.sender_bank}
+                benef_bank={trf.beneficiary_bank}
+                receiver={trf.beneficiary_name}
+                status={trf.status}
+                onDetail={onDetail}
+                amount={formatCurrency(trf.amount)}
+                date={formatDate(trf.completed_at)}
+                success
+              />
+            ))}
         </div>
-        <div className="filter">
-          <Filter onSelect={onSelect} />
-        </div>
-      </div>
-      {state.filteredTransactions &&
-        state.filteredTransactions.map((trf) => (
-          <List
-            key={trf.id}
-            id={trf.id}
-            sender_bank={trf.sender_bank}
-            benef_bank={trf.beneficiary_bank}
-            receiver={trf.beneficiary_name}
-            status={trf.status}
-            onDetail={onDetail}
-            amount={formatCurrency(trf.amount)}
-            date={formatDate(trf.completed_at)}
-            success
-          />
-        ))}
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };
