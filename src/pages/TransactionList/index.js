@@ -34,6 +34,7 @@ const TransactionList = () => {
   };
 
   useEffect(() => {
+    dispatch(handleState('search', ''))
     dispatch(fetchTransaction());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
